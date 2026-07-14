@@ -19,6 +19,6 @@ tests
 scripts
 postman
 ./postgres-data
-.vscode
+.vscode/
 .gitignore
 README.md
