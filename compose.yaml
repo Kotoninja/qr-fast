@@ -1,0 +1,12 @@
+services:
+  api:
+    build: .
+    ports:
+      - "80:80"
+    volumes:
+      - .:/app
+    restart: on-failure:3
+    environment:
+      - UV_LINK_MODE=copy
+      - WATCHFILES_FORCE_POLLING=true
+    command: uv run uvicorn main:app --host 0.0.0.0 --port 80 --reload
