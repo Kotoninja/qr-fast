@@ -19,7 +19,7 @@ import base64
 
 from qr_core import QRStyle, generate_qr, image_to_png_bytes
 
-app = FastAPI(title="QR Customizer Service")
+app = FastAPI(title="QR engine", redoc_url=None)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
