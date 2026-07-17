@@ -290,10 +290,18 @@
       <label class="form-check-label small-label" for="transparent_bg">Прозрачный фон</label>
     </div>
 
-    <div class="section-title">Логотип по центру</div>
-    <div class="mb-3">
-      <label class="form-label small-label">Изображение (необязательно)</label>
-      <input type="file" class="form-control" id="logo" accept="image/*">
+  <div class="section-title">Логотип по центру</div>
+  <div class="mb-3">
+    <label class="form-label small-label">Изображение (необязательно)</label>
+    <input type="file" class="form-control" id="logo" accept="image/*">
+  </div>
+
+  <div id="logo_options" class="d-none">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <span class="small-label form-label mb-0">Выбрано: <code id="logo_filename" class="small"></code></span>
+      <button type="button" class="btn btn-outline-danger btn-sm rounded-pill" id="removeLogoBtn">
+        <i class="bi bi-x-lg me-1"></i>Убрать
+      </button>
     </div>
     <div class="form-check form-switch mb-3">
       <input class="form-check-input" type="checkbox" id="rounded_logo" checked>
@@ -303,6 +311,7 @@
       <label class="form-label small-label">Размер логотипа: <span id="logo_size_val">20%</span></label>
       <input type="range" class="form-range" id="logo_size_ratio" min="10" max="30" value="20">
     </div>
+  </div>
 
     <div class="section-title">Технические параметры</div>
     <div class="row g-2 mb-3">
@@ -421,8 +430,19 @@ function scheduleRender(){
    const evt = (el.tagName === 'SELECT' || el.type === 'checkbox') ? 'change' : 'input';
    el.addEventListener(evt, scheduleRender);
  });
-$('logo').addEventListener('change', render);
-$('refreshBtn').addEventListener('click', render);
+$('logo').addEventListener('change', () => {
+  const file = $('logo').files[0];
+  $('logo_options').classList.toggle('d-none', !file);
+  if (file) $('logo_filename').textContent = file.name;
+  render();
+});
+
+$('removeLogoBtn').addEventListener('click', () => {
+  $('logo').value = '';
+  $('logo_options').classList.add('d-none');
+  render();
+});
+ $('refreshBtn').addEventListener('click', render);
 
 async function render(){
   const status = $('status');
