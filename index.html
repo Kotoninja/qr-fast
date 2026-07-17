@@ -158,8 +158,8 @@
     border-color: #f97316;
   }
   .form-check-input:focus {
-      border-color: #f97316;
-      box-shadow: 0 0 0 0.25rem rgba(249, 115, 22, 0.25);
+    border-color: #f97316;
+    box-shadow: 0 0 0 0.25rem rgba(249, 115, 22, 0.25);
   }
   .form-range::-webkit-slider-thumb {
     background-color: #f97316;
@@ -183,23 +183,32 @@
     box-shadow: 0 0 0 1px #fff, 0 0 0 0.25rem rgba(249, 115, 22, 0.25);
   }
   .btn-orange {
-      background-color: #f97316;
-      border-color: #f97316;
-      color: #ffffff;
+    background-color: #f97316;
+    border-color: #f97316;
+    color: #ffffff;
   }
   .btn-orange:hover {
-      background-color: #ea580c;
-      border-color: #ea580c;
-      color: #ffffff;
+    background-color: #ea580c;
+    border-color: #ea580c;
+    color: #ffffff;
   }
   .btn-orange:active, 
   .btn-orange--dark-btn:focus-visible {
-      background-color: #c2410c;
-      border-color: #c2410c;
-      color: #ffffff;
+    background-color: #c2410c;
+    border-color: #c2410c;
+    color: #ffffff;
   }
   .btn-orange:focus {
-      box-shadow: 0 0 0 0.25rem rgba(249, 115, 22, 0.25);
+    box-shadow: 0 0 0 0.25rem rgba(249, 115, 22, 0.25);
+  }
+  .api-style { 
+    background: linear-gradient(to right, #ffffff, #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-decoration: none;
+    font-weight: 5000;
+    font-size: 30px;
   }
 </style>
 </head>
@@ -207,11 +216,19 @@
 
 <nav class="navbar border-bottom" style="border-color:var(--bs-border-color) !important;">
   <div class="container-fluid px-4 py-2">
-    <span class="navbar-brand mb-0">
-      <img width="32px" height="32px" src="static/images/favicon.svg">
-      <span class="font-display fw-bold fs-5">QR Studio</span>
-      <small class="ms-2">кастомизация визуала QR-кодов</small>
-    </span>
+    <div class="d-flex justify-content-between align-items-center w-100">
+      <!-- Левая часть с логотипом и названием -->
+      <span class="navbar-brand mb-0">
+        <img width="32px" height="32px" src="static/images/favicon.svg">
+        <span class="font-display fw-bold fs-5">QR Studio</span>
+        <small class="ms-2">кастомизация визуала QR-кодов</small>
+      </span>
+      
+      <!-- Ссылка API справа -->
+      <a href="https://qr-engine/docs" class="api-style" >
+        API
+      </a>
+    </div>
   </div>
 </nav>
 
