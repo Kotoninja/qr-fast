@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>QR Fast — быстрый конструктор QR-кодов</title>
+<title>QR Fast — быстрый генератор QR-кодов с кастомизацией и открытым API</title>
+<meta name="description" content="QR Fast — сервис для мгновенной генерации QR-кодов с гибкой кастомизацией: цвета, логотип, форма элементов. Бесплатно, без регистрации. Открытый API для разработчиков — интеграция за пару минут.">
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -217,14 +218,12 @@
 <nav class="navbar border-bottom" style="border-color:var(--bs-border-color) !important;">
   <div class="container-fluid px-4 py-2">
     <div class="d-flex justify-content-between align-items-center w-100">
-      <!-- Левая часть с логотипом и названием -->
       <span class="navbar-brand mb-0">
         <img width="32px" height="32px" src="static/images/favicon.svg">
-        <span class="font-display fw-bold fs-5">QR Fast</span>
+        <h1 class="font-display fw-bold fs-5">QR Fast</h1>
         <small class="ms-2">кастомизация визуала QR-кодов</small>
       </span>
       
-      <!-- Ссылка API справа -->
       <a href="https://qr-fast/docs" class="api-style" >
         API
       </a>
@@ -233,7 +232,6 @@
 </nav>
 
 <div class="row g-0">
-  <!-- Панель настроек -->
   <div class="col-lg-4 col-xl-3 panel p-4">
 
     <div class="section-title">Содержимое</div>
