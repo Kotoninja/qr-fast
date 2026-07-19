@@ -28,7 +28,6 @@ from qrcode.image.styles.moduledrawers.pil import (
 from qrcode.image.styles.colormasks import (
     SolidFillColorMask,
     RadialGradiantColorMask,
-    SquareGradiantColorMask,
     HorizontalGradiantColorMask,
     VerticalGradiantColorMask,
 )
@@ -46,7 +45,6 @@ MODULE_DRAWERS = {
 
 GRADIENTS = {
     "radial": RadialGradiantColorMask,
-    "square": SquareGradiantColorMask,
     "horizontal": HorizontalGradiantColorMask,
     "vertical": VerticalGradiantColorMask,
 }
@@ -72,7 +70,7 @@ class QRStyle:
     module_style: str = "rounded"          # square | rounded | circle | gapped | vertical_bars | horizontal_bars
     fg_color: str = "#000000"              # основной цвет (или начало градиента)
     fg_color2: Optional[str] = None        # второй цвет градиента (если None — сплошная заливка)
-    gradient: str = "radial"               # radial | square | horizontal | vertical
+    gradient: str = "radial"               # radial | horizontal | vertical
     bg_color: Optional[str] = "#FFFFFF"    # None -> прозрачный фон
     box_size: int = 10                     # размер одного модуля в пикселях
     border: int = 4                        # отступ в модулях (минимум 4 по спецификации)
@@ -112,7 +110,7 @@ def generate_qr(style: QRStyle) -> Image.Image:
             back_color=bg,
             left_color=fg,
             right_color=fg2,
-        ) if style.gradient in ("horizontal", "square") else mask_cls(
+        ) if style.gradient == "horizontal" else mask_cls(
             back_color=bg,
             top_color=fg,
             bottom_color=fg2,
