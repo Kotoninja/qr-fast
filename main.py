@@ -10,16 +10,17 @@ HTTP-сервис для кастомизации QR-кодов.
     http://localhost:8000/docs       -> Swagger UI (можно дергать API руками)
 """
 
-from typing import Optional
-
-from fastapi import FastAPI, Form, File, UploadFile, HTTPException
-from fastapi.responses import Response, HTMLResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
 import base64
+from typing import Literal, Optional
+
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.responses import HTMLResponse, JSONResponse, Response
+from fastapi.staticfiles import StaticFiles
 
 from qr_core import QRStyle, generate_qr, image_to_png_bytes
 
-app = FastAPI(title="QR Customizer Service")
+app = FastAPI(title="QR fast", redoc_url=None, docs_url=None)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
@@ -27,6 +28,15 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 def index():
     with open("./index.html", "r", encoding="utf-8") as f:
         return f.read()
+
+
+@app.get("/api", include_in_schema=False)
+def overridden_swagger():
+    return get_swagger_ui_html(
+        openapi_url="/openapi.json",
+        title="QR-Fast API",
+        swagger_favicon_url="static/images/favicon.svg",
+    )
 
 
 async def _build_image(
@@ -71,7 +81,7 @@ async def generate_png(
     module_style: str = Form("rounded"),
     fg_color: str = Form("#000000"),
     fg_color2: Optional[str] = Form(None),
-    gradient: str = Form("radial"),
+    gradient: Literal["radial", "horizontal", "vertical"] = Form("radial"),
     bg_color: Optional[str] = Form("#FFFFFF"),
     box_size: int = Form(10),
     border: int = Form(4),
@@ -104,11 +114,11 @@ async def generate_base64(
     module_style: str = Form("rounded"),
     fg_color: str = Form("#000000"),
     fg_color2: Optional[str] = Form(None),
-    gradient: str = Form("radial"),
+    gradient: Literal["radial", "horizontal", "vertical"] = Form("radial"),
     bg_color: Optional[str] = Form("#FFFFFF"),
     box_size: int = Form(10),
     border: int = Form(4),
-    error_correction: str = Form("H"),
+    error_correction: Literal["L", "M", "Q", "H"] = Form("H"),
     logo_size_ratio: float = Form(0.22),
     rounded_logo: bool = Form(True),
     logo: Optional[UploadFile] = File(None),

@@ -1,185 +1,101 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-bs-theme="dark">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>QR Studio — конструктор QR-кодов</title>
+<title>QR Fast — быстрый генератор QR-кодов с кастомизацией и открытым API</title>
+<meta name="description" content="QR Fast — сервис для мгновенной генерации QR-кодов с гибкой кастомизацией: цвета, логотип, форма элементов. Бесплатно, без регистрации. Открытый API для разработчиков — интеграция за пару минут.">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="icon" href="static/images/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="static/images/favicon.svg">
+
 <style>
   :root{
-    --paper:#1c1b1a;
-    --panel:#232220;
-    --panel-2:#2b2a27;
-    --ink:#edeae3;
-    --ink-dim:#a7a39a;
-    --amber:#f97316;
-    --teal:#4fa69c;
-    --line:#3a3834;
-    --radius:10px;
+    --bs-primary: #f97316;
+    --bs-primary-rgb: 232,163,61;
+    --bs-body-bg: #1c1b1a;
+    --bs-body-color: #edeae3;
+    --bs-border-color: #3a3834;
+    --bs-secondary-color: #a7a39a;
+    --bs-tertiary-bg: #232220;
+    --teal: #4fa69c;
   }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
   body{
-    background:var(--paper);
-    color:var(--ink);
     font-family:'Inter',system-ui,sans-serif;
-    min-height:100vh;
-    background-image:
-      radial-gradient(var(--line) 1px, transparent 1px);
+    background-image: radial-gradient(var(--bs-border-color) 1px, transparent 1px);
     background-size: 22px 22px;
     background-position: -11px -11px;
+    min-height:100vh;
   }
-  header{
-    padding:28px 32px 18px;
-    display:flex;
-    align-items:baseline;
-    gap:14px;
-    border-bottom:1px solid var(--line);
-  }
-  header h1{
-    font-family:'Space Grotesk',sans-serif;
-    font-size:22px;
-    font-weight:700;
-    margin:0;
-    letter-spacing:.2px;
-  }
-  header span{
+  .font-display{font-family:'Space Grotesk',sans-serif;}
+  .font-mono{font-family:'JetBrains Mono',monospace;}
+
+  .navbar-brand small{
     font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    color:var(--ink-dim);
-    background:var(--panel);
-    border:1px solid var(--line);
-    padding:3px 8px;
-    border-radius:999px;
+    font-size:.7rem;
+    color:var(--bs-secondary-color);
   }
-  main{
-    display:grid;
-    grid-template-columns:380px 1fr;
-    gap:0;
-    min-height:calc(100vh - 74px);
-  }
-  @media (max-width:860px){
-    main{grid-template-columns:1fr;}
-  }
+
   .panel{
-    padding:28px;
-    border-right:1px solid var(--line);
-    background:var(--panel);
+    background:var(--bs-tertiary-bg);
+    border-right:1px solid var(--bs-border-color);
+    min-height:calc(100vh - 62px - 58px);
     overflow-y:auto;
-  }
-  .field{margin-bottom:20px;}
-  .field label{
-    display:block;
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:.08em;
-    color:var(--ink-dim);
-    margin-bottom:8px;
-  }
-  .field textarea,
-  .field select,
-  .field input[type="text"],
-  .field input[type="number"]{
-    width:100%;
-    background:var(--panel-2);
-    border:1px solid var(--line);
-    color:var(--ink);
-    border-radius:8px;
-    padding:10px 12px;
-    font-family:'Inter',sans-serif;
-    font-size:14px;
-  }
-  .field textarea{resize:vertical;min-height:56px;}
-  .row{display:flex;gap:12px;}
-  .row > *{flex:1;}
-  .color-row{display:flex;align-items:center;gap:10px;}
-  .color-row input[type="color"]{
-    width:40px;height:40px;
-    border:1px solid var(--line);
-    border-radius:8px;
-    background:none;
-    padding:0;
-    cursor:pointer;
-  }
-  .color-row code{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    color:var(--ink-dim);
-  }
-  .toggle-line{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-  }
-  .toggle-line label{margin:0;}
-  .segmented{
-    display:flex;
-    border:1px solid var(--line);
-    border-radius:8px;
-    overflow:hidden;
-  }
-  .segmented button{
-    flex:1;
-    background:var(--panel-2);
-    border:none;
-    color:var(--ink-dim);
-    padding:8px 6px;
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    cursor:pointer;
-    border-right:1px solid var(--line);
-  }
-  .segmented button:last-child{border-right:none;}
-  .segmented button.active{
-    background:var(--amber);
-    color:#1c1b1a;
-    font-weight:600;
-  }
-  input[type="range"]{width:100%;accent-color:var(--amber);}
-  input[type="file"]{
-    font-size:12px;
-    color:var(--ink-dim);
   }
   .section-title{
     font-family:'Space Grotesk',sans-serif;
-    font-size:13px;
+    font-size:.8rem;
     font-weight:600;
     color:var(--teal);
-    margin:26px 0 14px;
     text-transform:uppercase;
     letter-spacing:.06em;
+    margin-top:1.75rem;
+    margin-bottom:.9rem;
   }
   .section-title:first-of-type{margin-top:0;}
+  .form-label.small-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.7rem;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--bs-secondary-color);
+  }
+  .form-control-color{width:100%;height:2.5rem;padding:.25rem;}
+
+  .btn-check + .btn-outline-light{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.72rem;
+  }
+  .btn-check:checked + .btn-outline-light{
+    background:var(--bs-primary);
+    border-color:var(--bs-primary);
+    color:#1c1b1a;
+    font-weight:600;
+  }
 
   .stage{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:22px;
-    padding:40px;
+    min-height:calc(100vh - 62px - 58px);
   }
   .swatch{
-    width:min(420px, 80vw);
+    width:min(420px, 78vw);
     aspect-ratio:1/1;
-    border-radius:24px;
+    border-radius:1.5rem;
+    border:1px solid var(--bs-border-color);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.55);
     display:flex;
     align-items:center;
     justify-content:center;
-    box-shadow:0 30px 60px -20px rgba(0,0,0,.55);
-    position:relative;
     overflow:hidden;
-    border:1px solid var(--line);
+    position:relative;
     background:
       linear-gradient(45deg, #2b2a27 25%, transparent 25%) -10px 0/20px 20px,
       linear-gradient(-45deg, #2b2a27 25%, transparent 25%) -10px 0/20px 20px,
       linear-gradient(45deg, transparent 75%, #2b2a27 75%) -10px 0/20px 20px,
       linear-gradient(-45deg, transparent 75%, #2b2a27 75%) -10px 0/20px 20px,
-      var(--panel);
+      var(--bs-tertiary-bg);
   }
   .swatch img{
     width:78%;
@@ -189,136 +105,242 @@
   }
   .swatch .placeholder{
     font-family:'JetBrains Mono',monospace;
-    color:var(--ink-dim);
-    font-size:12px;
+    color:var(--bs-secondary-color);
+    font-size:.8rem;
     text-align:center;
-    padding:20px;
+    padding:1.25rem;
   }
-  .actions{display:flex;gap:12px;}
-  .btn{
-    font-family:'Space Grotesk',sans-serif;
-    font-weight:600;
-    font-size:13px;
-    padding:12px 20px;
-    border-radius:999px;
-    border:1px solid var(--line);
-    background:var(--panel-2);
-    color:var(--ink);
-    cursor:pointer;
-    text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-  }
-  .btn.primary{
-    background:var(--amber);
-    color:#1c1b1a;
-    border-color:var(--amber);
-  }
-  .status{
+
+  .status-line{
     font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    color:var(--ink-dim);
-    min-height:14px;
+    font-size:.72rem;
+    color:var(--bs-secondary-color);
+    min-height:1rem;
+  }
+
+  footer{
+    border-top:1px solid var(--bs-border-color);
+    background:var(--bs-tertiary-bg);
+    font-family:'JetBrains Mono',monospace;
+    font-size:.75rem;
+    color:var(--bs-secondary-color);
+  }
+  footer a{color:var(--teal);}
+  footer a:hover{color:var(--bs-primary);}
+  footer .btn-link{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.75rem;
+    color:var(--teal);
+    text-decoration:none;
+    border-bottom:1px dotted var(--teal);
+    padding:0;
+  }
+  footer .btn-link:hover{color:var(--bs-primary);border-color:var(--bs-primary);}
+
+  .modal-content{
+    background:var(--bs-tertiary-bg);
+    border:1px solid var(--bs-border-color);
+  }
+  .modal-title{font-family:'Space Grotesk',sans-serif;}
+  .rules-list li{margin-bottom:.65rem;}
+  .rules-disclaimer{
+    font-size:.78rem;
+    color:var(--bs-secondary-color);
+    border-left:2px solid var(--bs-primary);
+    padding-left:.75rem;
+    margin-bottom:1.25rem;
+  }
+  .colot-input-cube {
+    width: 35px;
+    height: 35px;
+  }
+  .form-check-input:checked {
+    background-color: #f97316;
+    border-color: #f97316;
+  }
+  .form-check-input:focus {
+    border-color: #f97316;
+    box-shadow: 0 0 0 0.25rem rgba(249, 115, 22, 0.25);
+  }
+  .form-range::-webkit-slider-thumb {
+    background-color: #f97316;
+  }
+  .form-range::-moz-range-thumb {
+    background-color: #f97316;
+  }
+  .form-range::-webkit-slider-thumb:active {
+    background-color: #c2410c;
+  }
+  .form-range::-moz-range-thumb:active {
+    background-color: #c2410c;
+  }
+  .form-range:focus {
+    border-color: #f97316;
+  }
+  .form-range:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 0.25rem rgba(249, 115, 22, 0.25);
+  }
+  .form-range:focus::-moz-range-thumb {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 0.25rem rgba(249, 115, 22, 0.25);
+  }
+  .btn-orange {
+    background-color: #f97316;
+    border-color: #f97316;
+    color: #ffffff;
+  }
+  .btn-orange:hover {
+    background-color: #ea580c;
+    border-color: #ea580c;
+    color: #ffffff;
+  }
+  .btn-orange:active, 
+  .btn-orange--dark-btn:focus-visible {
+    background-color: #c2410c;
+    border-color: #c2410c;
+    color: #ffffff;
+  }
+  .btn-orange:focus {
+    box-shadow: 0 0 0 0.25rem rgba(249, 115, 22, 0.25);
+  }
+  .api-style { 
+    background: linear-gradient(to right, #ffffff, #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-decoration: none;
+    font-weight: 5000;
+    font-size: 30px;
   }
 </style>
 </head>
 <body>
 
-<header style="display: flex; align-items: center;" >
-  <img width="32px" height="32px" src="static/images/favicon.svg">
-  <h1>QRcode Studio</h1>
-  <span>кастомизация визуала QR-кодов</span>
-</header>
+<nav class="navbar border-bottom" style="border-color:var(--bs-border-color) !important;">
+  <div class="container-fluid px-4 py-2">
+    <div class="d-flex justify-content-between align-items-center w-100">
+      <span class="navbar-brand d-flex align-items-center mb-0">
+        <img class="me-3" width="32px" height="32px" src="static/images/favicon.svg">
+        <h1 class="font-display fw-bold m-0">QR Fast</h1>
+        <small class="ms-2">кастомизация визуала QR-кодов</small>
+      </span>
+      
+      <a href="https://qr-fast/api" class="api-style" >
+        API
+      </a>
+    </div>
+  </div>
+</nav>
 
-<main>
-  <div class="panel">
+<div class="row g-0">
+  <div class="col-lg-4 col-xl-3 panel p-4">
 
     <div class="section-title">Содержимое</div>
-    <div class="field">
-      <label>Данные (ссылка / текст)</label>
-      <textarea id="data" placeholder="https://example.com">https://example.com</textarea>
+    <div class="mb-3">
+      <label class="form-label small-label">Данные (ссылка / текст)</label>
+      <textarea class="form-control" id="data" rows="2" placeholder="https://qr-fast.ru">https://qr-fast.ru</textarea>
     </div>
 
     <div class="section-title">Форма модулей</div>
-    <div class="field">
-      <div class="segmented" id="module_style">
-        <button data-v="square">квадрат</button>
-        <button data-v="rounded" class="active">скругл.</button>
-        <button data-v="circle">круг</button>
-        <button data-v="gapped">точки</button>
-      </div>
+    <div class="btn-group w-100 mb-3" role="group" id="module_style">
+      <input type="radio" class="btn-check" name="module_style" id="ms_square" data-v="square" autocomplete="off">
+      <label class="btn btn-outline-light" for="ms_square">квадрат</label>
+
+      <input type="radio" class="btn-check" name="module_style" id="ms_rounded" data-v="rounded" autocomplete="off" checked>
+      <label class="btn btn-outline-light" for="ms_rounded">скругл.</label>
+
+      <input type="radio" class="btn-check" name="module_style" id="ms_circle" data-v="circle" autocomplete="off">
+      <label class="btn btn-outline-light" for="ms_circle">круг</label>
+
+      <input type="radio" class="btn-check" name="module_style" id="ms_gapped" data-v="gapped" autocomplete="off">
+      <label class="btn btn-outline-light" for="ms_gapped">точки</label>
     </div>
 
     <div class="section-title">Цвет</div>
-    <div class="field color-row">
-      <input type="color" id="fg_color" value="#1c1b1a">
-      <div>
-        <label style="margin:0">Основной цвет</label>
-        <code id="fg_color_val">#1c1b1a</code>
+    <div class="row g-2 align-items-center mb-2">
+      <div class="col-auto">
+        <input type="color" class="form-control form-control-color colot-input-cube" id="fg_color" value="#1c1b1a">
+      </div>
+      <div class="col">
+        <div class="small-label form-label mb-0">Основной цвет</div>
+        <code id="fg_color_val" class="small">#1c1b1a</code>
       </div>
     </div>
-    <div class="field toggle-line">
-      <label style="margin:0">Градиент</label>
-      <input type="checkbox" id="use_gradient">
+
+    <div class="form-check form-switch mb-2">
+      <input class="form-check-input" type="checkbox" id="use_gradient">
+      <label class="form-check-label small-label" for="use_gradient">Градиент</label>
     </div>
-    <div class="field color-row" id="fg_color2_wrap" style="display:none">
-      <input type="color" id="fg_color2" value="#e8a33d">
-      <div>
-        <label style="margin:0">Второй цвет</label>
-        <code id="fg_color2_val">#e8a33d</code>
+
+    <div class="row g-2 align-items-center mb-2 d-none" id="fg_color2_wrap">
+      <div class="col-auto">
+        <input type="color" class="form-control form-control-color colot-input-cube" id="fg_color2" value="#e8a33d">
+      </div>
+      <div class="col">
+        <div class="small-label form-label mb-0">Второй цвет</div>
+        <code id="fg_color2_val" class="small">#e8a33d</code>
       </div>
     </div>
-    <div class="field" id="gradient_dir_wrap" style="display:none">
-      <label>Направление градиента</label>
-      <select id="gradient">
+
+    <div class="mb-3 d-none" id="gradient_dir_wrap">
+      <label class="form-label small-label">Направление градиента</label>
+      <select class="form-select" id="gradient">
         <option value="radial">радиальный</option>
         <option value="horizontal">горизонтальный</option>
         <option value="vertical">вертикальный</option>
-        <option value="square">квадратный</option>
       </select>
     </div>
 
-    <div class="field color-row">
-      <input type="color" id="bg_color" value="#ffffff">
-      <div>
-        <label style="margin:0">Фон</label>
-        <code id="bg_color_val">#ffffff</code>
+    <div class="row g-2 align-items-center mb-2">
+      <div class="col-auto">
+        <input type="color" class="form-control form-control-color colot-input-cube" id="bg_color" value="#ffffff">
+      </div>
+      <div class="col">
+        <div class="small-label form-label mb-0">Фон</div>
+        <code id="bg_color_val" class="small">#ffffff</code>
       </div>
     </div>
-    <div class="field toggle-line">
-      <label style="margin:0">Прозрачный фон</label>
-      <input type="checkbox" id="transparent_bg">
+    <div class="form-check form-switch mb-3">
+      <input class="form-check-input" type="checkbox" id="transparent_bg">
+      <label class="form-check-label small-label" for="transparent_bg">Прозрачный фон</label>
     </div>
 
-    <div class="section-title">Логотип по центру</div>
-    <div class="field">
-      <label>Изображение (необязательно)</label>
-      <input type="file" id="logo" accept="image/*">
+  <div class="section-title">Логотип по центру</div>
+  <div class="mb-3">
+    <label class="form-label small-label">Изображение (необязательно)</label>
+    <input type="file" class="form-control" id="logo" accept="image/*">
+  </div>
+
+  <div id="logo_options" class="d-none">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <span class="small-label form-label mb-0">Выбрано: <code id="logo_filename" class="small"></code></span>
+      <button type="button" class="btn btn-outline-danger btn-sm rounded-pill" id="removeLogoBtn">
+        <i class="bi bi-x-lg me-1"></i>Убрать
+      </button>
     </div>
-    <div class="field toggle-line">
-      <label style="margin:0">Круглая подложка</label>
-      <input type="checkbox" id="rounded_logo" checked>
+    <div class="form-check form-switch mb-3">
+      <input class="form-check-input" type="checkbox" id="rounded_logo" checked>
+      <label class="form-check-label small-label" for="rounded_logo">Круглая подложка</label>
     </div>
-    <div class="field">
-      <label>Размер логотипа: <span id="logo_size_val">22%</span></label>
-      <input type="range" id="logo_size_ratio" min="10" max="35" value="22">
+    <div class="mb-3">
+      <label class="form-label small-label">Размер логотипа: <span id="logo_size_val">20%</span></label>
+      <input type="range" class="form-range" id="logo_size_ratio" min="10" max="30" value="20">
     </div>
+  </div>
 
     <div class="section-title">Технические параметры</div>
-    <div class="row">
-      <div class="field">
-        <label>Размер модуля (px)</label>
-        <input type="number" id="box_size" value="10" min="2" max="30">
+    <div class="row g-2 mb-3">
+      <div class="col">
+        <label class="form-label small-label">Размер модуля (px)</label>
+        <input type="number" class="form-control" id="box_size" value="10" min="2" max="30">
       </div>
-      <div class="field">
-        <label>Отступ (модулей)</label>
-        <input type="number" id="border" value="4" min="0" max="10">
+      <div class="col">
+        <label class="form-label small-label">Отступ (модулей)</label>
+        <input type="number" class="form-control" id="border" value="4" min="0" max="10">
       </div>
     </div>
-    <div class="field">
-      <label>Коррекция ошибок</label>
-      <select id="error_correction">
+    <div class="mb-2">
+      <label class="form-label small-label">Коррекция ошибок</label>
+      <select class="form-select" id="error_correction">
         <option value="L">L — минимальная</option>
         <option value="M">M — базовая</option>
         <option value="Q">Q — повышенная</option>
@@ -328,28 +350,71 @@
 
   </div>
 
-  <div class="stage">
+  <!-- Превью -->
+  <div class="col-lg-8 col-xl-9 stage d-flex flex-column align-items-center justify-content-center gap-4 p-4">
     <div class="swatch" id="swatch">
       <div class="placeholder">Заполните форму слева —<br>превью появится здесь</div>
     </div>
-    <div class="actions">
-      <button class="btn primary" id="refreshBtn">Обновить превью</button>
-      <a class="btn" id="downloadBtn" href="#" download="qr-code.png">Скачать PNG</a>
+    <div class="d-flex gap-2">
+      <button class="btn btn-orange fw-semibold rounded-pill px-4" id="refreshBtn" type="button">
+        <i class="bi bi-arrow-clockwise me-1"></i>Обновить превью
+      </button>
+      <a class="btn btn-outline-light rounded-pill px-4" id="downloadBtn" href="#" download="qr-code.png">
+        <i class="bi bi-download me-1"></i>Скачать PNG
+      </a>
     </div>
-    <div class="status" id="status"></div>
+    <div class="status-line" id="status"></div>
   </div>
-</main>
+</div>
 
+<!-- Футер -->
+<footer class="d-flex flex-wrap align-items-center justify-content-between gap-2 px-4 py-3">
+  <div>По вопросам и предложениям — Telegram <a href="https://t.me/koton1nja" target="_blank" rel="noopener">@koton1nja</a></div>
+  <div class="d-flex gap-3 align-items-center">
+    <a href="https://pay.cloudtips.ru/p/e2643780" style="color: #f97316;">Поддержать проект</a>
+    <button class="btn btn-link" type="button" data-bs-toggle="modal" data-bs-target="#rulesModal">Правила пользования</button>
+  </div>
+</footer>
+
+<!-- Модалка: Правила пользования -->
+<div class="modal fade" id="rulesModal" tabindex="-1" aria-labelledby="rulesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="border-color:var(--bs-border-color);">
+        <h5 class="modal-title" id="rulesModalLabel">Правила пользования сервисом</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <div class="modal-body">
+        <p class="rules-disclaimer">
+          Документ описывает условия использования сервиса QR Fast («Сервис»). Продолжая пользоваться Сервисом, вы подтверждаете согласие с изложенными ниже условиями.
+        </p>
+        <ol class="rules-list">
+          <li><strong>Общие положения.</strong> Сервис предоставляется «как есть» (as is), без гарантий бесперебойной, безошибочной работы и полного соответствия результата ожиданиям пользователя.</li>
+          <li><strong>Назначение.</strong> Сервис предназначен для генерации визуально кастомизированных QR-кодов на основе данных, предоставленных пользователем.</li>
+          <li><strong>Проверка перед использованием.</strong> Перед публикацией, печатью или распространением сгенерированного кода пользователь обязан самостоятельно проверить его читаемость сканером на реальных устройствах — особенно при использовании логотипа, ярких градиентов или низкого уровня коррекции ошибок.</li>
+          <li><strong>Запрещённое использование.</strong> Запрещается использовать Сервис для создания кодов, ведущих на мошеннические, фишинговые, вредоносные ресурсы, а также для распространения материалов, нарушающих законодательство (включая экстремистский, оскорбительный контент, спам-рассылки без согласия получателей).</li>
+          <li><strong>Права на контент.</strong> Пользователь гарантирует, что обладает необходимыми правами на загружаемые изображения (логотипы, иллюстрации) и несёт единоличную ответственность за нарушение прав третьих лиц при их использовании.</li>
+          <li><strong>Ответственность.</strong> Администрация Сервиса не несёт ответственности за косвенные убытки, упущенную выгоду или иные последствия, возникшие в результате использования сгенерированных кодов, включая случаи их нечитаемости сканерами.</li>
+          <li><strong>Обработка данных.</strong> Загруженные логотипы и введённые данные используются исключительно для генерации QR-кода в рамках текущего запроса и не передаются третьим лицам, за исключением случаев, предусмотренных законодательством.</li>
+          <li><strong>Изменение правил.</strong> Администрация вправе вносить изменения в настоящие правила в любое время; актуальная версия публикуется на данной странице.</li>
+          <li><strong>Контакты.</strong> По всем вопросам, предложениям и обнаруженным ошибкам — Telegram <a href="https://t.me/koton1nja" target="_blank" rel="noopener">@koton1nja</a>.</li>
+        </ol>
+      </div>
+      <div class="modal-footer" style="border-color:var(--bs-border-color);">
+        <button type="button" class="btn btn-primary rounded-pill px-4" data-bs-dismiss="modal">Понятно, закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 <script>
 const $ = (id) => document.getElementById(id);
 
-// сегментированный переключатель формы модулей
 let moduleStyle = 'rounded';
-document.querySelectorAll('#module_style button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('#module_style button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    moduleStyle = btn.dataset.v;
+document.querySelectorAll('#module_style input[name="module_style"]').forEach(input => {
+  input.addEventListener('change', () => {
+    moduleStyle = input.dataset.v;
     render();
   });
 });
@@ -361,8 +426,8 @@ $('logo_size_ratio').addEventListener('input', e => $('logo_size_val').textConte
 
 $('use_gradient').addEventListener('change', e => {
   const show = e.target.checked;
-  $('fg_color2_wrap').style.display = show ? 'flex' : 'none';
-  $('gradient_dir_wrap').style.display = show ? 'block' : 'none';
+  $('fg_color2_wrap').classList.toggle('d-none', !show);
+  $('gradient_dir_wrap').classList.toggle('d-none', !show);
 });
 
 let lastImageDataUrl = null;
@@ -373,7 +438,6 @@ function scheduleRender(){
   debounceTimer = setTimeout(render, 400);
 }
 
-// live-обновление при вводе (кроме кнопки, которая шлёт сразу)
 ['data','fg_color','fg_color2','bg_color','transparent_bg','rounded_logo',
  'logo_size_ratio','box_size','border','error_correction','gradient','use_gradient']
  .forEach(id => {
@@ -381,8 +445,19 @@ function scheduleRender(){
    const evt = (el.tagName === 'SELECT' || el.type === 'checkbox') ? 'change' : 'input';
    el.addEventListener(evt, scheduleRender);
  });
-$('logo').addEventListener('change', render);
-$('refreshBtn').addEventListener('click', render);
+$('logo').addEventListener('change', () => {
+  const file = $('logo').files[0];
+  $('logo_options').classList.toggle('d-none', !file);
+  if (file) $('logo_filename').textContent = file.name;
+  render();
+});
+
+$('removeLogoBtn').addEventListener('click', () => {
+  $('logo').value = '';
+  $('logo_options').classList.add('d-none');
+  render();
+});
+ $('refreshBtn').addEventListener('click', render);
 
 async function render(){
   const status = $('status');
@@ -416,15 +491,16 @@ async function render(){
     const img = document.createElement('img');
     img.src = lastImageDataUrl;
     swatch.appendChild(img);
-    swatch.style.background = $('transparent_bg').checked ? '' : $('bg_color').value;
+
     if ($('transparent_bg').checked) {
-      // возвращаем шахматный фон-подложку для наглядности прозрачности
       swatch.style.background =
         'linear-gradient(45deg, #2b2a27 25%, transparent 25%) -10px 0/20px 20px,' +
         'linear-gradient(-45deg, #2b2a27 25%, transparent 25%) -10px 0/20px 20px,' +
         'linear-gradient(45deg, transparent 75%, #2b2a27 75%) -10px 0/20px 20px,' +
         'linear-gradient(-45deg, transparent 75%, #2b2a27 75%) -10px 0/20px 20px,' +
-        'var(--panel)';
+        'var(--bs-tertiary-bg)';
+    } else {
+      swatch.style.background = $('bg_color').value;
     }
 
     $('downloadBtn').href = lastImageDataUrl;
