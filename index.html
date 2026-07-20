@@ -2,7 +2,7 @@
 <html lang="ru" data-bs-theme="dark">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>QR Fast — быстрый генератор QR-кодов с кастомизацией и открытым API</title>
 <meta name="description" content="QR Fast — сервис для мгновенной генерации QR-кодов с гибкой кастомизацией: цвета, логотип, форма элементов. Бесплатно, без регистрации. Открытый API для разработчиков — интеграция за пару минут.">
 
@@ -22,6 +22,11 @@
     --bs-secondary-color: #a7a39a;
     --bs-tertiary-bg: #232220;
     --teal: #4fa69c;
+    --panel-h: 62px;
+    --footer-h: 58px;
+  }
+  html, body{
+    overflow-x:hidden;
   }
   body{
     font-family:'Inter',system-ui,sans-serif;
@@ -42,7 +47,7 @@
   .panel{
     background:var(--bs-tertiary-bg);
     border-right:1px solid var(--bs-border-color);
-    min-height:calc(100vh - 62px - 58px);
+    min-height:calc(100vh - var(--panel-h) - var(--footer-h));
     overflow-y:auto;
   }
   .section-title{
@@ -77,10 +82,10 @@
   }
 
   .stage{
-    min-height:calc(100vh - 62px - 58px);
+    min-height:calc(100vh - var(--panel-h) - var(--footer-h));
   }
   .swatch{
-    width:min(420px, 78vw);
+    width:min(420px, 82vw);
     aspect-ratio:1/1;
     border-radius:1.5rem;
     border:1px solid var(--bs-border-color);
@@ -116,6 +121,7 @@
     font-size:.72rem;
     color:var(--bs-secondary-color);
     min-height:1rem;
+    text-align:center;
   }
 
   footer{
@@ -193,7 +199,7 @@
     border-color: #ea580c;
     color: #ffffff;
   }
-  .btn-orange:active, 
+  .btn-orange:active,
   .btn-orange--dark-btn:focus-visible {
     background-color: #c2410c;
     border-color: #c2410c;
@@ -202,14 +208,15 @@
   .btn-orange:focus {
     box-shadow: 0 0 0 0.25rem rgba(249, 115, 22, 0.25);
   }
-  .api-style { 
+  .api-style {
     background: linear-gradient(to right, #ffffff, #f97316);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-decoration: none;
-    font-weight: 5000;
+    font-weight: 700;
     font-size: 30px;
+    white-space: nowrap;
   }
   .custom-tooltip {
     position: relative;
@@ -221,6 +228,7 @@
     visibility: hidden;
     opacity: 0;
     width: 300px;
+    max-width: 70vw;
     background-color: #333;
     color: #fff;
     text-align: center;
@@ -229,7 +237,7 @@
     font-size: 14px;
     line-height: 1.4;
     position: absolute;
-    bottom: 125%; 
+    bottom: 125%;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
@@ -245,13 +253,117 @@
     border-style: solid;
     border-color: #333 transparent transparent transparent;
   }
-  .custom-tooltip:hover .tooltip-box {
+  .custom-tooltip:hover .tooltip-box,
+  .custom-tooltip:active .tooltip-box,
+  .custom-tooltip:focus .tooltip-box {
     visibility: visible;
     opacity: 1;
   }
   .blur-back {
     backdrop-filter: blur(2px);
     background-color: #ffffff00;
+  }
+  @media (max-width: 991.98px){
+    :root{
+      --panel-h: 56px;
+    }
+    .panel{
+      min-height:auto;
+      border-right:none;
+      border-bottom:1px solid var(--bs-border-color);
+    }
+    .stage{
+      min-height:60vh;
+    }
+  }
+  @media (max-width: 575.98px){
+    .navbar .container-fluid{
+      padding-left: .9rem;
+      padding-right: .9rem;
+    }
+    .navbar-brand h1{
+      font-size: 1.05rem;
+    }
+    .navbar-brand small{
+      display:none;
+    }
+    .navbar-brand img{
+      width:26px !important;
+      height:26px !important;
+    }
+    .api-style{
+      font-size: 20px;
+    }
+    .panel{
+      padding: 1rem !important;
+    }
+    .stage{
+      padding: 1rem !important;
+      gap: 1rem !important;
+    }
+    .section-title{
+      margin-top: 1.25rem;
+      margin-bottom: .6rem;
+      font-size: .74rem;
+    }
+    #module_style{
+      flex-wrap: wrap;
+    }
+    #module_style .btn{
+      flex: 1 1 45%;
+      margin-bottom: .4rem;
+      border-radius: .5rem !important;
+    }
+    .swatch{
+      width: min(360px, 88vw);
+      border-radius: 1rem;
+    }
+    .d-flex.gap-2{
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    #refreshBtn, #downloadBtn{
+      flex: 1 1 auto;
+      text-align: center;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    .custom-tooltip .tooltip-box{
+      width: 220px;
+      left: auto;
+      right: -10px;
+      transform: none;
+    }
+    .custom-tooltip .tooltip-box::after{
+      left: auto;
+      right: 14px;
+      margin-left: 0;
+    }
+    footer{
+      flex-direction: column;
+      text-align: center;
+      padding: .9rem 1rem !important;
+    }
+    footer .d-flex.gap-3{
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .modal-dialog{
+      margin: .75rem;
+    }
+  }
+  @media (pointer: coarse){
+    .btn, .form-check-input, .btn-close{
+      min-height: 38px;
+    }
+    .form-range::-webkit-slider-thumb{
+      width: 20px;
+      height: 20px;
+    }
+    .form-range::-moz-range-thumb{
+      width: 20px;
+      height: 20px;
+    }
   }
 </style>
 </head>
@@ -265,7 +377,7 @@
         <h1 class="font-display fw-bold m-0">QR Fast</h1>
         <small class="ms-2">кастомизация визуала QR-кодов</small>
       </span>
-      
+
       <a href="https://qr-fast/api" class="api-style" >
         API
       </a>
@@ -347,7 +459,7 @@
     </div>
 
     <div class="section-title">
-      Логотип по центру 
+      Логотип по центру
       <span class="custom-tooltip">
         <i class="bi mt-3 bi-exclamation-circle-fill" style="color: red;"></i>
         <span class="tooltip-box">Чем крупнее логотип и выше плотность данных (длинная ссылка), тем выше риск, что код перестанет сканироваться. Используйте error_correction=H при вставке логотипа и не делайте logo_size_ratio больше ~0.25. После генерации всегда проверяйте код реальным сканером телефона.</span>
