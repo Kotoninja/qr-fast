@@ -211,6 +211,44 @@
     font-weight: 5000;
     font-size: 30px;
   }
+  .custom-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 5px;
+  }
+  .custom-tooltip .tooltip-box {
+    visibility: hidden;
+    opacity: 0;
+    width: 300px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 14px;
+    line-height: 1.4;
+    position: absolute;
+    bottom: 125%; 
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    transition: opacity 0.2s ease-in-out;
+  }
+  .custom-tooltip .tooltip-box::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+  }
+  .custom-tooltip:hover .tooltip-box {
+    visibility: visible;
+    opacity: 1;
+  }
 </style>
 </head>
 <body>
@@ -304,28 +342,34 @@
       <label class="form-check-label small-label" for="transparent_bg">Прозрачный фон</label>
     </div>
 
-  <div class="section-title">Логотип по центру</div>
-  <div class="mb-3">
-    <label class="form-label small-label">Изображение (необязательно)</label>
-    <input type="file" class="form-control" id="logo" accept="image/*">
-  </div>
-
-  <div id="logo_options" class="d-none">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <span class="small-label form-label mb-0">Выбрано: <code id="logo_filename" class="small"></code></span>
-      <button type="button" class="btn btn-outline-danger btn-sm rounded-pill" id="removeLogoBtn">
-        <i class="bi bi-x-lg me-1"></i>Убрать
-      </button>
-    </div>
-    <div class="form-check form-switch mb-3">
-      <input class="form-check-input" type="checkbox" id="rounded_logo" checked>
-      <label class="form-check-label small-label" for="rounded_logo">Круглая подложка</label>
+    <div class="section-title">
+      Логотип по центру 
+      <span class="custom-tooltip">
+        <i class="bi mt-3 bi-exclamation-circle-fill" style="color: red;"></i>
+        <span class="tooltip-box">Чем крупнее логотип и выше плотность данных (длинная ссылка), тем выше риск, что код перестанет сканироваться. Используйте error_correction=H при вставке логотипа и не делайте logo_size_ratio больше ~0.25. После генерации всегда проверяйте код реальным сканером телефона.</span>
+      </span>
     </div>
     <div class="mb-3">
-      <label class="form-label small-label">Размер логотипа: <span id="logo_size_val">20%</span></label>
-      <input type="range" class="form-range" id="logo_size_ratio" min="10" max="30" value="20">
+      <label class="form-label small-label">Изображение (необязательно)</label>
+      <input type="file" class="form-control" id="logo" accept="image/*">
     </div>
-  </div>
+
+    <div id="logo_options" class="d-none">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="small-label form-label mb-0">Выбрано: <code id="logo_filename" class="small"></code></span>
+        <button type="button" class="btn btn-outline-danger btn-sm rounded-pill" id="removeLogoBtn">
+          <i class="bi bi-x-lg me-1"></i>Убрать
+        </button>
+      </div>
+      <div class="form-check form-switch mb-3">
+        <input class="form-check-input" type="checkbox" id="rounded_logo" checked>
+        <label class="form-check-label small-label" for="rounded_logo">Круглая подложка</label>
+      </div>
+      <div class="mb-3">
+        <label class="form-label small-label">Размер логотипа: <span id="logo_size_val">20%</span></label>
+        <input type="range" class="form-range" id="logo_size_ratio" min="10" max="30" value="20">
+      </div>
+    </div>
 
     <div class="section-title">Технические параметры</div>
     <div class="row g-2 mb-3">
