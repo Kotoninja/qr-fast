@@ -14,12 +14,13 @@ import base64
 from typing import Literal, Optional
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.responses import HTMLResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from qr_core import QRStyle, generate_qr, image_to_png_bytes
 
-app = FastAPI(title="QR fast", redoc_url=None)
+app = FastAPI(title="QR fast", redoc_url=None, docs_url=None)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
@@ -27,6 +28,15 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 def index():
     with open("./index.html", "r", encoding="utf-8") as f:
         return f.read()
+
+
+@app.get("/api", include_in_schema=False)
+def overridden_swagger():
+    return get_swagger_ui_html(
+        openapi_url="/openapi.json",
+        title="QR-Fast API",
+        swagger_favicon_url="static/images/favicon.svg",
+    )
 
 
 async def _build_image(
