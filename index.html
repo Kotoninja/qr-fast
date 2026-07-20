@@ -249,11 +249,15 @@
     visibility: visible;
     opacity: 1;
   }
+  .blur-back {
+    backdrop-filter: blur(2px);
+    background-color: #ffffff00;
+  }
 </style>
 </head>
 <body>
 
-<nav class="navbar border-bottom" style="border-color:var(--bs-border-color) !important;">
+<nav class="navbar border-bottom blur-back" style="border-color:var(--bs-border-color) !important;">
   <div class="container-fluid px-4 py-2">
     <div class="d-flex justify-content-between align-items-center w-100">
       <span class="navbar-brand d-flex align-items-center mb-0">
@@ -270,7 +274,7 @@
 </nav>
 
 <div class="row g-0">
-  <div class="col-lg-4 col-xl-3 panel p-4">
+  <div class="col-lg-4 col-xl-3 panel p-4 blur-back">
 
     <div class="section-title">Содержимое</div>
     <div class="mb-3">
