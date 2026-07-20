@@ -90,7 +90,10 @@ async def generate_png(
     rounded_logo: bool = Form(True),
     logo: Optional[UploadFile] = File(None),
 ):
-    """Возвращает готовый PNG-файл кастомизированного QR-кода."""
+    """
+    Возвращает готовый PNG-файл кастомизированного QR-кода.\n
+    Чем крупнее логотип и выше плотность данных (длинная ссылка), тем выше риск, что код перестанет сканироваться. Используйте error_correction=H при вставке логотипа и <b>не</b> делайте logo_size_ratio больше ~0.25.
+    """
     img = await _build_image(
         data,
         module_style,
@@ -123,7 +126,10 @@ async def generate_base64(
     rounded_logo: bool = Form(True),
     logo: Optional[UploadFile] = File(None),
 ):
-    """То же самое, но в виде JSON с картинкой в base64 — удобно дергать из фронта через fetch()."""
+    """
+    То же самое, но в виде JSON с картинкой в base64 — удобно дергать из фронта через fetch().\n
+    Чем крупнее логотип и выше плотность данных (длинная ссылка), тем выше риск, что код перестанет сканироваться. Используйте error_correction=H при вставке логотипа и <b>не</b> делайте logo_size_ratio больше ~0.25.
+    """
     img = await _build_image(
         data,
         module_style,
