@@ -20,7 +20,7 @@ from fastapi.staticfiles import StaticFiles
 
 from qr_core import QRStyle, generate_qr, image_to_png_bytes
 
-app = FastAPI(title="QR fast", redoc_url=None, docs_url=None)
+app = FastAPI(title="QR Fast", redoc_url=None, docs_url=None)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
