@@ -20,6 +20,7 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - /etc/letsencrypt/:/etc/letsencrypt/:ro
       - ./static:/static/
+      - ./data:/data/
     environment:
       TZ: "Europe/Moscow"
     depends_on:
